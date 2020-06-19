@@ -1,5 +1,7 @@
 import { uniqBy } from "lodash"
 import { IGatsbyState } from "../redux/types"
+import { Stats } from "webpack"
+import { string } from "@hapi/joi"
 
 const mapComponentsToStaticQueryHashes = (
   staticQueryComponents: IGatsbyState["staticQueryComponents"]
@@ -24,7 +26,7 @@ export function mapTemplatesToStaticQueryHashes(
     `.cache/async-requires.js`,
   ]
 
-  const globalStaticQueries = new Set()
+  const globalStaticQueries = new Set<string>()
 
   const getDeps = (mod): any => {
     const staticQueryModuleComponentPath = mod.resource
@@ -54,7 +56,9 @@ export function mapTemplatesToStaticQueryHashes(
         })
         .map(r => r.module)
 
-      const uniqDependents = uniqBy(nonTerminalDependents, d => d.identifier())
+      const uniqDependents = uniqBy(nonTerminalDependents, (d: any) =>
+        d.identifier()
+      )
 
       for (const x of uniqDependents) {
         result.add(x.resource)
@@ -89,11 +93,12 @@ export function mapTemplatesToStaticQueryHashes(
     staticQueryComponents
   )
 
-  const globalStaticQueryHashes = []
+  const globalStaticQueryHashes: string[] = []
 
-  globalStaticQueries.forEach(q =>
-    globalStaticQueryHashes.push(mapOfComponentsToStaticQueryHashes.get(q))
-  )
+  globalStaticQueries.forEach(q => {
+    const hash = mapOfComponentsToStaticQueryHashes.get(q)
+    if (hash) globalStaticQueryHashes.push(hash)
+  })
 
   const mapOfTemplatesToStaticQueryHashes = Array.from(components).reduce(
     (map, [page]) => {
@@ -101,16 +106,18 @@ export function mapTemplatesToStaticQueryHashes(
 
       // Does this page contain an inline static query?
       if (mapOfComponentsToStaticQueryHashes.has(page)) {
-        staticQueryHashes.push(mapOfComponentsToStaticQueryHashes.get(page))
+        const hash = mapOfComponentsToStaticQueryHashes.get(page)
+        if (hash) staticQueryHashes.push()
       }
 
       // Check dependencies
       mapOfStaticQueryComponentsToDependants.forEach(
         (setOfDependants, staticQueryComponentPath) => {
           if (setOfDependants.has(page)) {
-            staticQueryHashes.push(
-              mapOfComponentsToStaticQueryHashes.get(staticQueryComponentPath)
+            const hash = mapOfComponentsToStaticQueryHashes.get(
+              staticQueryComponentPath
             )
+            if (hash) staticQueryHashes.push()
           }
         }
       )

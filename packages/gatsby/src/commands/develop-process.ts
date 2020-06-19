@@ -698,7 +698,7 @@ module.exports = async (program: IProgram): Promise<void> => {
           if (
             !isEqual(
               state.staticQueriesByTemplate.get(componentPath)?.sort(),
-              staticQueryHashes.map(toString)?.sort()
+              staticQueryHashes.map(String)?.sort()
             )
           ) {
             store.dispatch({

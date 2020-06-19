@@ -41,7 +41,7 @@ export const buildProductionBundle = async (
             if (
               !isEqual(
                 state.staticQueriesByTemplate.get(componentPath)?.sort(),
-                staticQueryHashes.map(toString)?.sort()
+                staticQueryHashes.map(String)?.sort()
               )
             ) {
               store.dispatch({

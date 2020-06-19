@@ -192,6 +192,9 @@ jobs:
           root: ./
           paths:
             - "*"
+      - run: ls -al ./packages/gatsby-admin/node_modules/.bin
+      - run: ls -al ./packages/gatsby/node_modules/.bin
+      - run: ls -al ./node_modules/.bin
 
   lint:
     executor: node

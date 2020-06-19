@@ -4,7 +4,7 @@
   "version": "2.12.46",
   "author": "Kyle Mathews <mathews.kyle@gmail.com>",
   "bin": {
-    "gatsby": "lib/index.js"
+    "gatsby": "cli.js"
   },
   "bugs": {
     "url": "https://github.com/gatsbyjs/gatsby/issues"

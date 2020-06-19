@@ -9,6 +9,7 @@ import glob from "glob"
 import express from "express"
 import got from "got"
 import webpack from "webpack"
+import { isEqual } from "lodash"
 import graphqlHTTP from "express-graphql"
 import graphqlPlayground from "graphql-playground-middleware-express"
 import graphiqlExplorer from "gatsby-graphiql-explorer"
@@ -63,6 +64,7 @@ import {
 } from "../utils/feedback"
 
 import { enqueueFlush } from "../utils/page-data"
+import { mapTemplatesToStaticQueryHashes } from "../utils/map-pages-to-static-query-hashes"
 import {
   markWebpackStatusAsPending,
   markWebpackStatusAsDone,
@@ -684,8 +686,41 @@ module.exports = async (program: IProgram): Promise<void> => {
       webpackActivity = null
     }
 
-    enqueueFlush()
-    markWebpackStatusAsDone()
+    if (isSuccessful) {
+      const state = store.getState()
+      const mapOfTemplatesToStaticQueryHashes = mapTemplatesToStaticQueryHashes(
+        state,
+        stats
+      )
+
+      mapOfTemplatesToStaticQueryHashes.forEach(
+        (staticQueryHashes, componentPath) => {
+          if (
+            !isEqual(
+              state.staticQueriesByTemplate.get(componentPath)?.sort(),
+              staticQueryHashes.map(toString)?.sort()
+            )
+          ) {
+            store.dispatch({
+              type: `ADD_PENDING_TEMPLATE_DATA_WRITE`,
+              payload: {
+                componentPath,
+              },
+            })
+            store.dispatch({
+              type: `SET_STATIC_QUERIES_BY_TEMPLATE`,
+              payload: {
+                componentPath,
+                staticQueryHashes,
+              },
+            })
+          }
+        }
+      )
+
+      enqueueFlush()
+      markWebpackStatusAsDone()
+    }
 
     done()
   })

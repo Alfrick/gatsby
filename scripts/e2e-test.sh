@@ -19,6 +19,6 @@ ls -al ./node_modules/.bin
 cd "$SRC_PATH" &&
 gatsby-dev --set-path-to-repo "$GATSBY_PATH" &&
 gatsby-dev --scan-once && # copies _all_ files in gatsby/packages
-chmod +x ./node_modules/.bin/gatsby && # this is sometimes necessary to ensure executable
+([[ -f ./node_modules/.bin/gatsby ]] && chmod +x ./node_modules/.bin/gatsby || return 0) && # this is sometimes necessary to ensure executable
 sh -c "$CUSTOM_COMMAND" &&
 echo "e2e test run succeeded"

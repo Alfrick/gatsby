@@ -1,7 +1,5 @@
 import { uniqBy } from "lodash"
 import { IGatsbyState } from "../redux/types"
-import { Stats } from "webpack"
-import { string } from "@hapi/joi"
 
 const mapComponentsToStaticQueryHashes = (
   staticQueryComponents: IGatsbyState["staticQueryComponents"]

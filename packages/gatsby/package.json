@@ -184,6 +184,7 @@
     "apis.json",
     "ipc.json",
     "cache-dir",
+    "cli.js",
     "dist",
     "gatsby-admin-public",
     "graphql.js",

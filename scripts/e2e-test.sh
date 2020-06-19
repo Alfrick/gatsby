@@ -12,6 +12,9 @@ ls -al ./packages/gatsby-admin/node_modules/.bin
 echo "ls -al ./packages/gatsby/node_modules/.bin"
 ls -al ./packages/gatsby/node_modules/.bin 
 
+echo "ls -al ./node_modules/.bin"
+ls -al ./node_modules/.bin 
+
 # setting up child integration test link to gatsby packages
 cd "$SRC_PATH" &&
 gatsby-dev --set-path-to-repo "$GATSBY_PATH" &&
